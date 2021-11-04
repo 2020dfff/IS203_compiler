@@ -39,6 +39,7 @@ int main()
 {
     yylex();
     fprintf(stderr,"\nNumber of digit=%d\n",nDigitNumber);
+    printf("%d\t%d\t%d\n", chars, words, lines);
     return(0);
 }
 
