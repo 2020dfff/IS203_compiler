@@ -27,19 +27,20 @@ WORD ([^ \t\n\r\a]+)
 
 %%
 
-\n      {++num_lines; ++num_chars;}
-.       {++num_chars;}
-{DIGIT} {nDigitNumber=nDigitNumber+1;}
-{WORD}		{ numWords++; numChars += yyleng; return T_WORD; }
+\n      {lines++; chars++;}
+.       {chars++;}
+{WORD}		{ words++; chars += yyleng; return 1;}
 <<EOF>>		{ return 0;}
 
 %%
 
 int main()
 {
-    yylex();
-    fprintf(stderr,"\nNumber of digit=%d\n",nDigitNumber);
-    printf("%d\t%d\t%d\n", chars, words, lines);
+    int token_type;
+	while (token_type = yylex()) {
+		fprintf("#%s\t%d", lines, yytext);
+	}
+    fprintf("lines:%d\twords:%d\tchars:%d\n", chars, words, lines);
     return(0);
 }
 
