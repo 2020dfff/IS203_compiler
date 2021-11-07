@@ -11,7 +11,6 @@ DIGIT [0-9]
 INT {DIGIT}+
 FLOAT {DIGIT}+"."{DIGIT}+
 CONST ({INT}|{DIGIT})
-
 COMMENT ^#[^\n]*
 TYPEID (INT)|(FLOAT)|(String)|(Bool)|(Void)
 DELIM [\t  " "]
@@ -21,10 +20,8 @@ OBJECT [a-z]({LETTER}|_|DIGIT)*
 OPT ("|"|"~"|"&"|"-"|"*"|"/"|"+"|"^"|"="|":="|"=="|"!="|">"|"<"|"<="|">="|"!!="|"||"|"&&")
 BRACKET (";"|"{"|"}"|"("|")")
 PLAHOLD ("%f"|"%s"|"%lld")
-KEYWORD (fprintf)|(while)|(aafor)|(if)|(else)|(continue)|(break)|(return)|(func)
+KEYWORD ("return"|"break"|"if"|"else"|"continue"|"while"|"aafor"|"fprintf") 
 WORD ([^ \t\n\r\a]+)
-
-
 %%
 
 \n      {lines++; chars++;}
@@ -36,14 +33,7 @@ WORD ([^ \t\n\r\a]+)
 
 int main()
 {
-    int token_type;
-	while (token_type = yylex()) {
-		fprintf("#%s\t%d", lines, yytext);
-	}
+   yylex();
+	fprintf("#%s\t%d", lines, yytext);
     fprintf("lines:%d\twords:%d\tchars:%d\n", chars, words, lines);
-    return(0);
-}
-
-int yywrap() {
-	return 1;
 }
