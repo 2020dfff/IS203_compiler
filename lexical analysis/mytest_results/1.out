@@ -1,0 +1,19 @@
+#2 TYPEID	Void
+#2 OBJECT	func
+#2 OBJECT	main
+#2 	(
+#2 	)
+#2 	{
+#3 TYPEID	Float
+#3 OBJECT	x
+#3 	:=
+#3 decimal	6.0
+#3 	;
+#4 TYPEID	Bool
+#4 OBJECT	y
+#4 	:=
+#4 INT	1
+#4 	;
+#5 KEYWORD	return
+#5 	;
+#6 	}

@@ -1,0 +1,23 @@
+#2 TYPEID	Float
+#2 OBJECT	func
+#2 OBJECT	max
+#2 	(
+#2 TYPEID	Float
+#2 OBJECT	x
+#2 TYPEID	Float
+#2 OBJECT	y
+#2 	)
+#3 	{
+#4 KEYWORD	if
+#4 OBJECT	x
+#4 	>
+#4 OBJECT	y
+#4 	{
+#4 KEYWORD	return
+#4 OBJECT	x
+#4 	;
+#4 	}
+#5 KEYWORD	return
+#5 OBJECT	y
+#5 	;
+#6 	}

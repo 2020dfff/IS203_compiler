@@ -1,0 +1,37 @@
+#2 TYPEID	Void
+#2 OBJECT	func
+#2 OBJECT	main
+#2 	(
+#2 	)
+#2 	{
+#3 TYPEID	Int
+#3 OBJECT	x
+#3 	:=
+#3 INT	7
+#3 	;
+#4 TYPEID	Int
+#4 OBJECT	y
+#4 	:=
+#4 INT	5
+#4 	;
+#5 KEYWORD	while
+#5 OBJECT	x
+#5 	<
+#5 INT	10
+#5 	{
+#6 OBJECT	x
+#6 	:=
+#6 OBJECT	x
+#6 	+
+#6 INT	1
+#6 	;
+#7 OBJECT	y
+#7 	:=
+#7 OBJECT	y
+#7 	+
+#7 INT	2
+#7 	;
+#8 	}
+#9 KEYWORD	return
+#9 	;
+#10 	}

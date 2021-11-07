@@ -1,0 +1,113 @@
+#2 TYPEID	Void
+#2 OBJECT	func
+#2 OBJECT	main
+#2 	(
+#2 	)
+#3 	{
+#4 TYPEID	Float
+#4 OBJECT	x1
+#4 	:=
+#4 decimal	12234432.3456
+#4 	;
+#5 TYPEID	Float
+#5 OBJECT	x2
+#5 	:=
+#5 INT	33
+#5 	;
+#6 TYPEID	Float
+#6 OBJECT	x3
+#6 	:=
+#6 INT	34
+#6 	;
+#7 TYPEID	Int
+#7 OBJECT	y
+#7 	:=
+#7 INT	256
+#7 	;
+#8 TYPEID	Float
+#8 OBJECT	x4
+#8 	:=
+#8 OBJECT	x1
+#8 OBJECT	x2
+#8 	;
+#9 TYPEID	Bool
+#9 OBJECT	k
+#9 	:=
+#9 	(
+#9 OBJECT	x1
+#9 	<
+#9 OBJECT	x2
+#9 	)
+#9 	&
+#9 	(
+#9 OBJECT	x2
+#9 	<=
+#9 OBJECT	x3
+#9 	)
+#9 	&&
+#9 	(
+#9 OBJECT	x3
+#9 	<
+#9 OBJECT	x1
+#9 	)
+#9 	|
+#9 	(
+#9 OBJECT	x3
+#9 	>=
+#9 OBJECT	x1
+#9 	)
+#10 TYPEID	Bool
+#10 OBJECT	g
+#10 	:=
+#10 	(
+#10 OBJECT	x1
+#10 	>=
+#10 OBJECT	x2
+#10 	)
+#10 	|
+#10 	(
+#10 OBJECT	x2
+#10 	>
+#10 OBJECT	x3
+#10 	)
+#10 	||
+#10 	(
+#10 OBJECT	x3
+#10 	>=
+#10 OBJECT	x1
+#10 	)
+#10 	&&
+#10 	(
+#10 OBJECT	x4
+#10 	>
+#10 INT	5
+#10 	)
+#10 	==
+#10 INT	1
+#11 TYPEID	Float
+#11 OBJECT	kk
+#11 	:=
+#11 	(
+#11 	(
+#11 decimal	1+2
+#11 	+
+#11 INT	4
+#11 	)
+#11 	/
+#11 INT	7
+#11 	)
+#11 	*
+#11 decimal	9-7
+#11 	;
+#12 KEYWORD	fprintf
+#12 	(
+#12 OBJECT	stderr
+#12 OBJECT	lld
+#12 OBJECT	f
+#12 OBJECT	y
+#12 OBJECT	x1
+#12 	)
+#12 	;
+#13 KEYWORD	return
+#13 	;
+#14 	}
