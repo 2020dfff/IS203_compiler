@@ -133,10 +133,8 @@
 #12 OBJECTED e
 #12 OBJECTED r
 #12 OBJECTED r
-#12 OBJECTED l
-#12 OBJECTED l
-#12 OBJECTED d
-#12 OBJECTED f
+#12 %lld
+#12 %f
 #12 OBJECTED y
 #12 OBJECTED x
 #12 CONST 1
@@ -145,4 +143,4 @@
 #13 KEYWORD return
 #13 ;
 #14 }
-lines:15,words:0,chars:93
+lines:15,words:0,chars:346
