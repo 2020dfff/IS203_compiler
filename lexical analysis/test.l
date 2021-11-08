@@ -15,50 +15,59 @@ DIGIT [0-9]
 func ("main"|"max")
 INT {DIGIT}+
 OBJECTED [a-z]
-FLOAT {DIGIT}+"."{DIGIT}+
-LETTER [a-zA-Z] 
+FLOAT {DIGIT}+"."{DIGIT}+ 
 Comment ("#").*
 Com ("func")
-Type ("int"|"double"|"short"|"char"|"void"|"long")
 Bracket ("("|")"|"{"|"}"|"["|"]"|";")
 CONST ({INT}|{DIGIT})
 Next ("\n") 
-WORD ("111111")
+WORD [a-zA-Z]
 %%
-{Type} {
-	AddOutput(Row, "type", yytext);
-}  
 {KEYWORD} {
+	chars+=yyleng;
 	AddOutput(Row, "KEYWORD", yytext);
 } 
 {OPT} {
+	chars+=yyleng;
 	print(Row,yytext);
 } 
 {OBJECTED} {
+	++chars;
     AddOutput(Row, "OBJECTED", yytext);
 }
 {func} {
+	chars+=yyleng;
     AddOutput(Row,"func", yytext);
 }
 {TYPEID} {
+	chars+=yyleng;
 	AddOutput(Row, "TYPEID", yytext);
 } 
 {CONST} {
+	chars+=yyleng;
 	AddOutput(Row, "CONST", yytext);
 } 
+{PLAHOLD} {
+	chars+=yyleng;
+	print(Row,yytext);
+}
 {Bracket} {
+	chars+=yyleng;
     print(Row,yytext);
 } 
-{Comment} {} 
-{Com} {} 
+{WORD} {
+	words++;
+	chars+=yyleng;
+}
+{Comment} {chars+=yyleng;} 
+{Com} {chars+=yyleng;} 
 {Next} {++Row;chars++;} 
 .      {chars++;}
-{WORD} {words++; chars += yyleng;}
 %%
 int yywrap()
 {
 	printf("%s", Ans);
-    printf("lines:%d,words:%d,chars:%d",Row,words,chars);
+    printf("lines:%d,words:%d,chars:%d\n",Row, words, chars);
 	return 1;
 } 
 void AddOutput(int Row, char* type, char* text){ 
