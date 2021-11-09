@@ -6,8 +6,7 @@
 #3 TYPEID Float
 #3 OBJECTED x
 #3 :=
-#3 CONST 6
-#3 CONST 0
+#3 CONST 6.0
 #3 ;
 #4 TYPEID Bool
 #4 OBJECTED y
@@ -17,4 +16,4 @@
 #5 KEYWORD return
 #5 ;
 #6 }
-lines:7,words:0,chars:81
+lines:7,words:20,chars:81

@@ -7,8 +7,7 @@
 #4 OBJECTED x
 #4 CONST 1
 #4 :=
-#4 CONST 12234432
-#4 CONST 3456
+#4 CONST 12234432.3456
 #4 ;
 #5 TYPEID Float
 #5 OBJECTED x
@@ -133,8 +132,10 @@
 #12 OBJECTED e
 #12 OBJECTED r
 #12 OBJECTED r
-#12 %lld
-#12 %f
+#12 OBJECTED l
+#12 OBJECTED l
+#12 OBJECTED d
+#12 OBJECTED f
 #12 OBJECTED y
 #12 OBJECTED x
 #12 CONST 1
@@ -143,4 +144,4 @@
 #13 KEYWORD return
 #13 ;
 #14 }
-lines:15,words:0,chars:346
+lines:15,words:69,chars:346

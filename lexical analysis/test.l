@@ -8,21 +8,24 @@
     int words=0;
 	char *Ans = "";
 %}
+WORD (" ")
 KEYWORD ("return"|"break"|"if"|"else"|"continue"|"while"|"aafor"|"fprintf") 
+CONST ({DIGIT}+"."{DIGIT}+|{INT}|{DIGIT})
 OPT ("|"|"~"|"&"|"-"|"*"|"/"|"+"|"^"|"="|":="|"=="|"!="|">"|"<"|"<="|">="|"!!="|"||"|"&&")
 TYPEID (Int)|(Float)|(String)|(Bool)|(Void)
 DIGIT [0-9]
 func ("main"|"max")
 INT {DIGIT}+
 OBJECTED [a-z]
-FLOAT {DIGIT}+"."{DIGIT}+ 
 Comment ("#").*
 Com ("func")
 Bracket ("("|")"|"{"|"}"|"["|"]"|";")
-CONST ({INT}|{DIGIT})
 Next ("\n") 
-WORD [a-zA-Z]
 %%
+{WORD} {
+	words++;
+	chars+=yyleng;
+}
 {KEYWORD} {
 	chars+=yyleng;
 	AddOutput(Row, "KEYWORD", yytext);
@@ -47,18 +50,10 @@ WORD [a-zA-Z]
 	chars+=yyleng;
 	AddOutput(Row, "CONST", yytext);
 } 
-{PLAHOLD} {
-	chars+=yyleng;
-	print(Row,yytext);
-}
 {Bracket} {
 	chars+=yyleng;
     print(Row,yytext);
 } 
-{WORD} {
-	words++;
-	chars+=yyleng;
-}
 {Comment} {chars+=yyleng;} 
 {Com} {chars+=yyleng;} 
 {Next} {++Row;chars++;} 
