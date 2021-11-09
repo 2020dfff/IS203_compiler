@@ -1,3 +1,4 @@
+#name 3.sealpp
 #2 TYPEID Void
 #2 func main
 #2 (
@@ -34,4 +35,4 @@
 #9 KEYWORD return
 #9 ;
 #10 }
-lines:11,words:47,chars:132
+lines:11,words:29,chars:132

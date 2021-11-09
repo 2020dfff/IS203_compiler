@@ -8,24 +8,29 @@
     int words=0;
 	char *Ans = "";
 %}
-WORD (" ")
-KEYWORD ("return"|"break"|"if"|"else"|"continue"|"while"|"aafor"|"fprintf") 
-CONST ({DIGIT}+"."{DIGIT}+|{INT}|{DIGIT})
-OPT ("|"|"~"|"&"|"-"|"*"|"/"|"+"|"^"|"="|":="|"=="|"!="|">"|"<"|"<="|">="|"!!="|"||"|"&&")
-TYPEID (Int)|(Float)|(String)|(Bool)|(Void)
+Next [\n]
+DELIM [\t ]
+WORD {DELIM}+
+NEWLINE ^\n
+BLANK ^[ \t]+
 DIGIT [0-9]
-func ("main"|"max")
-INT {DIGIT}+
-OBJECTED [a-z]
-Comment ("#").*
-Com ("func")
+LETTER [a-zA-Z]
+COMNAME ({DIGIT}+"."{LETTER}+)
+COMCONTENT .*
+TITLECOMMENT ("# "{COMNAME})
+COMMENT ("#").*
+COMFUNC ("func "{OBJECTED})
+PLAHOLD ("%f"|"%s"|"%lld")
+stderr ("stderr")
+OBJECTED [a-z]({LETTER}|_|{DIGIT})*
+OPT ("|"|"~"|"&"|"-"|"*"|"/"|"+"|"^"|"="|":="|"%"|"=="|"!="|">"|"<"|"<="|">="|"!!="|"||"|"&&")
 Bracket ("("|")"|"{"|"}"|"["|"]"|";")
-Next ("\n") 
+KEYWORD ("return"|"break"|"if"|"else"|"continue"|"while"|"aafor"|"fprintf") 
+INT {DIGIT}+
+FLOAT {DIGIT}+"."{DIGIT}+
+CONST ({FLOAT}|{INT}|{DIGIT})
+TYPEID (Int)|(Float)|(String)|(Bool)|(Void)
 %%
-{WORD} {
-	words++;
-	chars+=yyleng;
-}
 {KEYWORD} {
 	chars+=yyleng;
 	AddOutput(Row, "KEYWORD", yytext);
@@ -34,13 +39,14 @@ Next ("\n")
 	chars+=yyleng;
 	print(Row,yytext);
 } 
+{PLAHOLD} {
+	chars+=yyleng;
+	print(Row,yytext);
+} 
+{stderr} {chars+=yyleng;}
 {OBJECTED} {
 	++chars;
     AddOutput(Row, "OBJECTED", yytext);
-}
-{func} {
-	chars+=yyleng;
-    AddOutput(Row,"func", yytext);
 }
 {TYPEID} {
 	chars+=yyleng;
@@ -54,13 +60,31 @@ Next ("\n")
 	chars+=yyleng;
     print(Row,yytext);
 } 
-{Comment} {chars+=yyleng;} 
-{Com} {chars+=yyleng;} 
-{Next} {++Row;chars++;} 
+{NEWLINE} {Row++;chars++;}
+{BLANK} {chars+=yyleng;}
+{TITLECOMMENT} {
+	chars+=yyleng;
+	yyless(2);
+	words++;
+} 
+{COMNAME} {titleprint(yytext);}
+{COMMENT} {
+	chars+=yyleng;
+}
+{COMFUNC} {
+	chars+=yyleng;words++;
+	print(Row,yytext);
+} 
+{Next} {++Row;chars++;words++;} 
+{WORD} {
+	words++;
+	chars+=yyleng;
+}
 .      {chars++;}
 %%
 int yywrap()
 {
+	
 	printf("%s", Ans);
     printf("lines:%d,words:%d,chars:%d\n",Row, words, chars);
 	return 1;
@@ -80,6 +104,17 @@ void print(int Row,char* text)
 {
     char str[50];
 	sprintf(str, "#%d %s\n", Row, text);
+	char *tmp = Ans; 
+	Ans = (char *) malloc(strlen(tmp) + strlen(str) + 1);
+	sprintf(Ans, "%s%s", tmp, str); 
+	if(strlen(tmp) > 0)
+		free(tmp);
+	return ; 
+}
+void titleprint(char* text)
+{
+	char str[50];
+	sprintf(str, "#name %s\n", text);
 	char *tmp = Ans; 
 	Ans = (char *) malloc(strlen(tmp) + strlen(str) + 1);
 	sprintf(Ans, "%s%s", tmp, str); 
