@@ -1,24 +1,41 @@
+#0 here is a word
 #name 2.sealpp
+#1 here is a word
 #2 TYPEID Float
+#2 here is a word
+#2 here is a word
 #2 func max
 #2 (
 #2 TYPEID Float
+#2 here is a word
 #2 OBJECTED x
+#2 here is a word
 #2 TYPEID Float
+#2 here is a word
 #2 OBJECTED y
 #2 )
+#3 here is a word
 #3 {
+#4 here is a word
 #4 KEYWORD if
+#4 here is a word
 #4 OBJECTED x
+#4 here is a word
 #4 >
+#4 here is a word
 #4 OBJECTED y
 #4 {
 #4 KEYWORD return
+#4 here is a word
 #4 OBJECTED x
 #4 ;
 #4 }
+#5 here is a word
 #5 KEYWORD return
+#5 here is a word
 #5 OBJECTED y
 #5 ;
+#6 here is a word
 #6 }
+#7 here is a word
 lines:7,words:17,chars:87

@@ -1,53 +1,96 @@
+#0 here is a word
 #name 4.sealpp
+#1 here is a word
 #2 TYPEID Void
+#2 here is a word
+#2 here is a word
 #2 func main
 #2 (
 #2 )
 #2 {
+#3 here is a word
 #3 TYPEID Int
+#3 here is a word
 #3 OBJECTED x
+#3 here is a word
 #3 :=
+#3 here is a word
 #3 CONST 0
 #3 ;
+#4 here is a word
 #4 TYPEID Int
+#4 here is a word
 #4 OBJECTED s
+#4 here is a word
 #4 :=
+#4 here is a word
 #4 CONST 7
 #4 ;
+#5 here is a word
 #5 TYPEID Int
+#5 here is a word
 #5 OBJECTED p
+#5 here is a word
 #5 :=
+#5 here is a word
 #5 CONST 88
 #5 ;
+#6 here is a word
 #6 KEYWORD aafor
+#6 here is a word
 #6 OBJECTED x
+#6 here is a word
 #6 :=
+#6 here is a word
 #6 CONST 0
 #6 ;
+#6 here is a word
 #6 OBJECTED x
+#6 here is a word
 #6 <
+#6 here is a word
 #6 CONST 10
 #6 ;
+#6 here is a word
 #6 OBJECTED x
+#6 here is a word
 #6 :=
+#6 here is a word
 #6 OBJECTED x
+#6 here is a word
 #6 +
+#6 here is a word
 #6 CONST 1
+#7 here is a word
 #7 {
+#8 here is a word
 #8 OBJECTED s
+#8 here is a word
 #8 :=
+#8 here is a word
 #8 OBJECTED s
+#8 here is a word
 #8 +
+#8 here is a word
 #8 OBJECTED x
 #8 ;
+#9 here is a word
 #9 OBJECTED p
+#9 here is a word
 #9 :=
+#9 here is a word
 #9 OBJECTED x
+#9 here is a word
 #9 +
+#9 here is a word
 #9 CONST 3
 #9 ;
+#10 here is a word
 #10 }
+#11 here is a word
 #11 KEYWORD return
 #11 ;
+#12 here is a word
 #12 }
+#13 here is a word
 lines:13,words:43,chars:150

@@ -7,6 +7,7 @@
     int chars=0;
     int words=0;
 	char *Ans = "";
+	int totwords=0;
 %}
 Next [\n]
 DELIM [\t ]
@@ -19,6 +20,7 @@ COMNAME ({DIGIT}+"."{LETTER}+)
 COMCONTENT .*
 TITLECOMMENT ("# "{COMNAME})
 COMMENT ("#").*
+COMMENTBLANK ("#"{COMCONTENT}*{DELIM}*)
 COMFUNC ("func "{OBJECTED})
 PLAHOLD ("%f"|"%s"|"%lld")
 stderr ("stderr")
@@ -45,7 +47,7 @@ TYPEID (Int)|(Float)|(String)|(Bool)|(Void)
 } 
 {stderr} {chars+=yyleng;}
 {OBJECTED} {
-	++chars;
+	chars+=yyleng;
     AddOutput(Row, "OBJECTED", yytext);
 }
 {TYPEID} {
@@ -66,20 +68,25 @@ TYPEID (Int)|(Float)|(String)|(Bool)|(Void)
 	chars+=yyleng;
 	yyless(2);
 	words++;
+	print(Row,"here is a word");
 } 
 {COMNAME} {titleprint(yytext);}
+{COMMENTBLANK} {totwords++;}
 {COMMENT} {
 	chars+=yyleng;
-}
+	words+=totwords;
+	print(Row,"here is a word");
+} 
 {COMFUNC} {
-	chars+=yyleng;words++;
+	chars+=yyleng;words++;print(Row,"here is a word");
 	print(Row,yytext);
 } 
-{Next} {++Row;chars++;words++;} 
+{Next} {++Row;chars++;words++;print(Row,"here is a word");} 
 {WORD} {
 	words++;
+	print(Row,"here is a word");
 	chars+=yyleng;
-}
+} 
 .      {chars++;}
 %%
 int yywrap()

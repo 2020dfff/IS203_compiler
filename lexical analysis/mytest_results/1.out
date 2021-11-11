@@ -1,20 +1,35 @@
+#0 here is a word
 #name 1.sealpp
+#1 here is a word
 #2 TYPEID Void
+#2 here is a word
+#2 here is a word
 #2 func main
 #2 (
 #2 )
 #2 {
+#3 here is a word
 #3 TYPEID Float
+#3 here is a word
 #3 OBJECTED x
+#3 here is a word
 #3 :=
+#3 here is a word
 #3 CONST 6.0
 #3 ;
+#4 here is a word
 #4 TYPEID Bool
+#4 here is a word
 #4 OBJECTED y
+#4 here is a word
 #4 :=
+#4 here is a word
 #4 CONST 1
 #4 ;
+#5 here is a word
 #5 KEYWORD return
 #5 ;
+#6 here is a word
 #6 }
+#7 here is a word
 lines:7,words:15,chars:81

@@ -1,39 +1,69 @@
+#0 here is a word
 #name 5.sealpp
+#1 here is a word
 #2 TYPEID Void
+#2 here is a word
+#2 here is a word
 #2 func main
 #2 (
 #2 )
+#3 here is a word
 #3 {
+#4 here is a word
 #4 TYPEID Float
+#4 here is a word
 #4 OBJECTED x1
+#4 here is a word
 #4 :=
+#4 here is a word
 #4 CONST 12234432.3456
 #4 ;
+#5 here is a word
 #5 TYPEID Float
+#5 here is a word
 #5 OBJECTED x2
+#5 here is a word
 #5 :=
+#5 here is a word
 #5 CONST 33
 #5 ;
+#6 here is a word
 #6 TYPEID Float
+#6 here is a word
 #6 OBJECTED x3
+#6 here is a word
 #6 :=
+#6 here is a word
 #6 CONST 34
 #6 ;
+#6 here is a word
+#7 here is a word
 #7 TYPEID Int
+#7 here is a word
 #7 OBJECTED y
+#7 here is a word
 #7 :=
+#7 here is a word
 #7 CONST 256
 #7 ;
+#8 here is a word
 #8 TYPEID Float
+#8 here is a word
 #8 OBJECTED x4
+#8 here is a word
 #8 :=
+#8 here is a word
 #8 OBJECTED x1
 #8 %
 #8 OBJECTED x2
 #8 ;
+#9 here is a word
 #9 TYPEID Bool
+#9 here is a word
 #9 OBJECTED k
+#9 here is a word
 #9 :=
+#9 here is a word
 #9 (
 #9 OBJECTED x1
 #9 <
@@ -57,9 +87,13 @@
 #9 >=
 #9 OBJECTED x1
 #9 )
+#10 here is a word
 #10 TYPEID Bool
+#10 here is a word
 #10 OBJECTED g
+#10 here is a word
 #10 :=
+#10 here is a word
 #10 (
 #10 OBJECTED x1
 #10 >=
@@ -85,9 +119,13 @@
 #10 )
 #10 ==
 #10 CONST 1
+#11 here is a word
 #11 TYPEID Float
+#11 here is a word
 #11 OBJECTED kk
+#11 here is a word
 #11 :=
+#11 here is a word
 #11 (
 #11 (
 #11 CONST 1
@@ -104,15 +142,20 @@
 #11 -
 #11 CONST 7
 #11 ;
+#12 here is a word
 #12 KEYWORD fprintf
 #12 (
 #12 %lld
+#12 here is a word
 #12 %f
 #12 OBJECTED y
 #12 OBJECTED x1
 #12 )
 #12 ;
+#13 here is a word
 #13 KEYWORD return
 #13 ;
+#14 here is a word
 #14 }
-lines:15,words:43,chars:323
+#15 here is a word
+lines:15,words:43,chars:329

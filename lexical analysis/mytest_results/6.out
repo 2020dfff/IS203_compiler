@@ -1,1 +1,47 @@
-lines:0,words:0,chars:0
+#0 here is a word
+#name 6.sealpp
+#1 here is a word
+#3 TYPEID Void
+#3 here is a word
+#3 here is a word
+#3 func func
+#3 (
+#3 )
+#3 here is a word
+#3 {
+#4 here is a word
+#4 KEYWORD fprintf
+#4 (
+#4 OBJECTED stdout
+#4 here is a word
+#4 OBJECTED abcdefgh
+#4 %lld
+#4 OBJECTED n
+#4 here is a word
+#4 CONST 233
+#4 )
+#4 ;
+#5 here is a word
+#5 KEYWORD return
+#5 ;
+#6 here is a word
+#6 }
+#7 here is a word
+#8 here is a word
+#8 TYPEID Void
+#8 here is a word
+#8 here is a word
+#8 func func2
+#8 (
+#8 )
+#8 {
+#9 here is a word
+#9 KEYWORD return
+#9 here is a word
+#9 CONST 1
+#9 here is a word
+#9 ;
+#10 here is a word
+#10 }
+#11 here is a word
+lines:11,words:19,chars:120
