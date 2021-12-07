@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_SEAL_YY_SEAL_TAB_H_INCLUDED
 # define YY_SEAL_YY_SEAL_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -54,17 +58,12 @@ extern int seal_yydebug;
     FUNC = 265,
     RETURN = 266,
     VAR = 271,
-    ERROR = 273,
     AND = 274,
     OR = 275,
     EQUAL = 276,
     NE = 277,
     GE = 278,
     LE = 279,
-    INT = 280,
-    STRING = 281,
-    BOOL = 282,
-    FLOAT = 283,
     CONST_BOOL = 267,
     CONST_INT = 268,
     CONST_STRING = 269,
@@ -84,17 +83,12 @@ extern int seal_yydebug;
 #define FUNC 265
 #define RETURN 266
 #define VAR 271
-#define ERROR 273
 #define AND 274
 #define OR 275
 #define EQUAL 276
 #define NE 277
 #define GE 278
 #define LE 279
-#define INT 280
-#define STRING 281
-#define BOOL 282
-#define FLOAT 283
 #define CONST_BOOL 267
 #define CONST_INT 268
 #define CONST_STRING 269
@@ -105,10 +99,9 @@ extern int seal_yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 89 "seal.y" /* yacc.c:1909  */
+#line 89 "seal.y"
 
       Boolean boolean;
       Symbol symbol;
@@ -138,9 +131,9 @@ union YYSTYPE
       char *error_msg;
     
 
-#line 142 "seal.tab.h" /* yacc.c:1909  */
-};
+#line 135 "seal.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

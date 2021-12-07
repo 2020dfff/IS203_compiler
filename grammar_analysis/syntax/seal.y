@@ -217,18 +217,17 @@
             }
             ;            
     
+    /*variableDecl*/
     variableDecl    : variable ';' {
                         $$ = variableDecl($1);
                     }
                     ;
-
-    /*variableDecl    : VAR variable ';' {
-                        $$ = variableDecl($2);
-                    }
-                    ;*/
-
+ 
     variableDecl_list   : {
                             $$ = nil_VariableDecls();
+                        }
+                        |variableDecl_list: variableDecl{
+                            $$ = single_VariableDecls($1);
                         }
                         | variableDecl_list variableDecl {
                             $$ = append_VariableDecls($1, single_VariableDecls($2));
@@ -242,35 +241,33 @@
     callDecl    : TYPEID FUNC OBJECTID '(' variable_list ')' stmtBlock {
                     $$ = callDecl($3, $5, $1, $7);
                 }
+                | TYPEID FUNC OBJECTID '('  ')' stmtBlock{
+                    $$ = callDecl($3, nil_Variables(), $1, $6);
+                }
                 ;
 
-    variable_list :	 variable	{ 
+    variable_list :	 {
+                    $$ = nil_Variables();
+                }
+                |   variable { 
 					$$ = single_Variables($1);
 				}
 				|	variable_list ',' variable {
 					$$ = append_Variables($1, single_Variables($3));
 				}
 				;
-
-    /*variable_list   : { variable
-                        $$ = nil_Variables($1);
-                    }
-                    | variable_list_notNone {
-                    	$$ = $1;
-                    }
-                    ;
-
-    variable_list_notNone	: variable {
-                    			$$ = single_Variables($1);
-                    		}
-                    		| variable_list_notNone ',' variable { 
-                          // several variables 
-                        		$$ = append_Variables($1, single_Variables($3));
-                    		}
-                    		; */
-
+    
     stmtBlock   : '{' variableDecl_list stmt_list '}' {
                     $$ = stmtBlock($2, $3);
+                }//maybe null
+                | '{' stmt_list '}' {
+                    $$ = stmtBlock(nil_VariableDecls(), $2);
+                }
+                | '{' variableDecl_list '}'{
+                    $$ = stmtBlock($2, nil_Stmts());
+                }//maybe both null
+                | '{' '}' {
+                    $$ = stmtBlock(nil_VariableDecls(), nil_Stmts());
                 }
                 ;
 
@@ -285,7 +282,9 @@
     stmt    : ';' {
                 $$ = no_expr();
             }
-            | expr ';' { }
+            | expr ';' {
+                $$ = $1;
+            }
             | ifStmt {
                 $$ = $1;
             }
@@ -310,13 +309,15 @@
             ;
 
     stmt_list: {
-      $$ = nil_Stmts();
-    }
-    | stmt_list stmt {
-      $$ = append_Stmts($1, single_Stmts($2));
-    };
+                $$ = nil_Stmts();
+            }
+            | stmt_list stmt {
+                $$ = append_Stmts($1, single_Stmts($2));
+            }
+            ;
 
-    ifStmt  : IF expr stmtBlock ELSE stmtBlock {//TODO:new nonterminal use youxianji
+    ifStmt  : IF expr stmtBlock ELSE stmtBlock {
+        //new nonterminal use DFA
                 $$ = ifstmt($2, $3, $5);
             }
             | IF expr stmtBlock {
@@ -388,9 +389,7 @@
             | CONST_STRING {
                 $$ = const_string($1);
             }
-            | call {
-                $$ = $1;
-            }
+            | call {$$ = $1;}
             | '(' expr ')' {
                 $$ = $2;
             }
@@ -456,38 +455,32 @@
             }
             ;
 
-      call : OBJECTID '(' actual_list ')' {
+    call : OBJECTID '(' actual_list ')' {
                 $$ = call($1, $3);
             }| OBJECTID '(' ')' {
-      $$ = call($1, nil_Actuals());
+                $$ = call($1, nil_Actuals());
             }
             ;
             
-    actual_list : { /* empty */
+
+    actual: expr {
+                    $$ = actual($1);
+                 }
+                 ;
+
+    actual_list: {
+                    // empty 
                     $$ = nil_Actuals();
-                }
-                | actual_list_notNone {
-                    $$ = $1;
-                }
-                ;
+                 }
+                 |actual {
+                    $$ = single_Actuals($1);
+                 }
+                 |actual_list ',' actual {
+                    $$ = append_Actuals($1, single_Actuals($3));
+                 }
+                 ;
 
-    actual_list_notNone	: expr { 
-                         // single
-                    	    $$ = single_Actuals(actual($1));
-                	}
-                	| actual_list_notNone ',' expr {
-                         // several expression
-                    		$$ = append_Actuals($1, single_Actuals(actual($3)));
-                	}
-                	;
-
-
-
-
-
-
-
-
+    
 
     /* end of grammar */
 %%
