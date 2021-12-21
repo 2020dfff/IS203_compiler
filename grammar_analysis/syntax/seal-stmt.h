@@ -6,6 +6,8 @@
 #include "seal-tree.handcode.h"
 #include "seal-decl.h"
 
+
+
 class Program_class : public tree_node {
 protected:
     Decls decls;
