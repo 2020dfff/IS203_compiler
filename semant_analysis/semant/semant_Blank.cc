@@ -92,24 +92,7 @@ static bool sameType(Symbol name1, Symbol name2) {
 }
 
 static void install_calls(Decls decls) {
-int cnt = 0;
-    for (int i = decls->first(); decls->more(i); i = decls->next(i)) {
-        Decl tmp_decl = decls->nth(i);
-        if (tmp_decl->isCallDecl()) {
-            CallDecl call = static_cast<CallDecl>(tmp_decl);
-            if (strcmp(call->getName()->get_string(), "printf") == 0) {
-                semant_error(tmp_decl) << "Function printf cannot be redefination.\n";
-                semant_error(tmp_decl) << "Function printf cannot have a name as printf.\n";
-            }
-            else if (callTable.find(tmp_decl->getName()) != callTable.end())
-                semant_error(tmp_decl) << "Function " << tmp_decl->getName() << " was previously defined.\n";
-            else {
-                callTable[tmp_decl->getName()] = call;
-                cnt++;
-            }
-        }
-    }
-    if (semant_debug) cout << "Debug msg: Install " << cnt << "callDecls." << endl;
+
 }
 
 static void install_globalVars(Decls decls) {

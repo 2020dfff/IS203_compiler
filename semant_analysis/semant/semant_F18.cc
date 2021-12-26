@@ -9,18 +9,15 @@ extern char *curr_filename;
 
 static ostream& error_stream = cerr;
 static int semant_errors = 0;
-
 static Decl curr_decl = 0;
-static bool has_return_bool = 0;
+
 static int inloop = 0;
-static int has_return_count = 0;
 
 typedef SymbolTable<Symbol, Symbol> ObjectEnvironment; // name, type
 ObjectEnvironment objectEnv;
 
 typedef std::map<Symbol, CallDecl> CallTable;
 CallTable callTable;
-
 
 ///////////////////////////////////////////////
 // helper func
@@ -52,15 +49,15 @@ static ostream& internal_error(int lineno) {
 //
 //////////////////////////////////////////////////////////////////////
 
-static Symbol 
-    Int,
-    Float,
-    String,
-    Bool,
-    Void,
-    Main,
-    print
-    ;
+static Symbol
+        Int,
+        Float,
+        String,
+        Bool,
+        Void,
+        Main,
+        print
+;
 
 bool isValidCallName(Symbol type) {
     return type != (Symbol)print;
@@ -80,7 +77,7 @@ static void initialize_constants(void) {
     Int         = idtable.add_string("Int");
     String      = idtable.add_string("String");
     Float       = idtable.add_string("Float");
-    Void        = idtable.add_string("Void");  
+    Void        = idtable.add_string("Void");
     // Main function
     Main        = idtable.add_string("main");
 
@@ -90,8 +87,8 @@ static void initialize_constants(void) {
 
 /*
     TODO :
-    you should fill the following function defines, so that semant() can realize a semantic 
-    analysis in a recursive way. 
+    you should fill the following function defines, so that semant() can realize a semantic
+    analysis in a recursive way.
     Of course, you can add any other functions to help.
 */
 
@@ -99,9 +96,8 @@ static bool sameType(Symbol name1, Symbol name2) {
     return strcmp(name1->get_string(), name2->get_string()) == 0;
 }
 
-//done
 static void install_calls(Decls decls) {
-       int cnt = 0;
+    int cnt = 0;
     for (int i = decls->first(); decls->more(i); i = decls->next(i)) {
         Decl tmp_decl = decls->nth(i);
         if (tmp_decl->isCallDecl()) {
@@ -121,199 +117,195 @@ static void install_calls(Decls decls) {
     if (semant_debug) cout << "Debug msg: Install " << cnt << "callDecls." << endl;
 }
 
-//done
 static void install_globalVars(Decls decls) {
-    objectEnv.enterscope();
-    for (int i=decls->first(); decls->more(i); i=decls->next(i)){
+    int cnt = 0;
+    for (int i = decls->first(); decls->more(i); i = decls->next(i)) {
         Decl tmp_decl = decls->nth(i);
         if (!tmp_decl->isCallDecl()) {
-            tmp_decl->check();
+            VariableDecl variableDecl = static_cast<VariableDecl>(tmp_decl);
+            if (objectEnv.lookup(variableDecl->getName()) != NULL)
+                semant_error(variableDecl) << "var " << variableDecl->getName()->get_string() << " was previously defined.\n";
+            else if (sameType(tmp_decl->getType(), Void)) {
+                semant_error(tmp_decl) << "var " << tmp_decl->getName()->get_string() << " cannot be of type Void. Void can just be used as return type.\n";
+            }
+            else {
+                objectEnv.addid(variableDecl->getName(), new Symbol(variableDecl->getType()));
+                ++cnt;
+            }
         }
+    }
+    if (semant_debug) {
+        cout << "Debug msg: Install " << cnt << "globalVarDecls.\n" << endl;
     }
 }
 
-static void check_calls(Decls decls) {
-    for (int i=decls->first(); decls->more(i); i=decls->next(i)) {
-        Decl tmp_decl = decls->nth(i);
-        if (tmp_decl->isCallDecl()) {
-            tmp_decl->check();
-        }
+static void check_calls() {
+    if (semant_debug) cout << "---check_calls---" << endl;
+    for (CallTable::iterator it = callTable.begin(); it != callTable.end(); it++) {
+        it->second->check();
     }
 }
 
-//?? done
 static void check_main() {
     if (callTable.find(Main) == callTable.end()) {
-        // has main or not
-        semant_error() << "Main function is not defined." << endl;
+        semant_error() << "Main function is not defined.\n";
+        return;
     }
-    else {
-        curr_decl = callTable[Main];
-        CallDecl main = static_cast<CallDecl>(curr_decl);
-        if (main->getVariables()->len() > 0) {
-            // main has no parameters
-            semant_error(curr_decl) << "Main function should not have any parameters." << endl;
-        }
-        else if (main->getType() != Void) {
-            // main return Void
-            semant_error(curr_decl) << "Main function should have return type Void." << endl;
-        }
+
+    curr_decl = callTable[Main];
+
+
+    CallDecl main = static_cast<CallDecl>(curr_decl);
+    if (main->getVariables()->len() != 0) {
+        semant_error(curr_decl) << "Main function should not have any parameters.\n";
     }
+
+    if (curr_decl->getType() != Void)
+        semant_error(curr_decl) << "Main function should have return type Void.\n";
 }
 
-//done
 void VariableDecl_class::check() {
-    Symbol name = this->getName();
-    Symbol type = this->getType();
-    if (objectEnv.probe(name)) {
-        semant_error(this) <<"variable" << name << " was previously defined." << endl;
-    }
-    else if (!isValidTypeName(type)) {
-        semant_error(this) << "variable " << name << " cannot be of type Void. Void can just be used as return type." << endl;
-    }
-    else {
-        objectEnv.addid(name, new Symbol(type));
-    }
+    if (semant_debug) cout << "---VariableDecl_class---" << getName()->get_string() << endl;
+
+    if (objectEnv.probe(variable->getName()) != NULL)
+        semant_error(this) << "var " << variable->getName()->get_string() << " was previously defined.\n";
+    else if (!isValidTypeName(variable->getType()))
+        semant_error(this) << "var " << variable->getName()->get_string() << " cannot be of type Void. Void can just be used as return type.\n";
+    else
+        objectEnv.addid(getName(), new Symbol(getType()));
 }
 
-
-//??? almost done?
 void CallDecl_class::check() {
+    if (semant_debug) cout << "---CallDecl_class::check---" << getName()->get_string() << endl;
+
+    if (!isValidCallName(getType()))
+        semant_error(this) << "ReturnType can not be print.\n";
+
     objectEnv.enterscope();
-    has_return_bool = 0;
-
-    StmtBlock body = this->getBody();
-
-    if (this->paras->len() > 6) {
-    // func has more than 6 parameters
-    semant_error(this) << "Function " << this->getName() << " has more than 6 parameters." << endl;
+    Variables params = getVariables();
+    for (int i = params->first(); params->more(i); i = params->next(i)) {
+        Variable param = params->nth(i);
+        if (semant_debug) cout << "---CallDecl_class---param_name---" << param->getName()->get_string() << endl;
+        bool flag1 = true, flag2 = true;
+        if (param->getType() == Void) {
+            semant_error(this) << "Function " << getName()->get_string() << " 's parameter has an invalid type Void.\n";
+            flag1 = false;
+        }
+        else if (objectEnv.probe(param->getName()) != NULL) {
+            semant_error(this) << "Function " << getName()->get_string() << " 's parameter has a duplicate name " << param->getName() << ".\n";
+            flag2 = false;
+        }
+        if (flag1 && flag2)
+            objectEnv.addid(param->getName(), new Symbol(param->getType()));
     }
 
-    for (int i=paras->first(); paras->more(i); i=paras->next(i)) {
-        Variable tmp_para = paras->nth(i);
-        Symbol paraName = tmp_para->getName();
-        Symbol paraType = tmp_para->getType();
+    getBody()->check(getType());
 
-        if(!isValidTypeName(paraType)) {
-            // morphological parameters type can't be Void
-            semant_error(this) << "Function " << this->getName() << " 's parameter has an invalid type Void." <<endl;
-        }
-        else if (objectEnv.probe(paraName)) {
-            semant_error(this) << "Function " << this->getName() << " 's parameter has a duplicate name " << paraName << "." << endl;
-        }
-        else {
-            objectEnv.addid(paraName, new Symbol(paraType));
-        }
+    //TODO:return
+    bool hasReturn = false;
+    Stmts stmts = getBody()->getStmts();
+    for (int i = stmts->first(); stmts->more(i); i = stmts->next(i)) {
+        hasReturn = hasReturn // | stmts->nth(i)->isReturn();
+        if (hasReturn) break;
     }
-    // not sure here
-    body->check(getType());
+    if (!hasReturn)
+        semant_error(this) << "Function " << getName()->get_string() << " must have an overall return statement.\n";
 
     objectEnv.exitscope();
-    if (!has_return_bool) {
-        semant_error(this) << "Function " << this->getName() << " must have an overall return statement." << endl;
-    }
 }
 
 void StmtBlock_class::check(Symbol type) {
+    if (semant_debug) cout << "---StmtBlock_class::check---" << endl;
     objectEnv.enterscope();
-    has_return_count++;
-    VariableDecls localVarDecls = this->getVariableDecls();
-    for (int i=localVarDecls->first(); localVarDecls->more(i); i=localVarDecls->next(i)) {
+    VariableDecls localVarDecls = getVariableDecls();
+    if (semant_debug) cout << "---StmtBlock_class::check---localVarDecl->getName()---" << " ";
+    for (int i = localVarDecls->first(); localVarDecls->more(i); i = localVarDecls->next(i)) {
         VariableDecl localVarDecl = localVarDecls->nth(i);
+        if (semant_debug) cout << localVarDecl->getName()->get_string() << " ";
         localVarDecl->check();
     }
-
-    Stmts localStmts = this->getStmts();
-    for (int i=localStmts->first(); localStmts->more(i); i=localStmts->next(i)) {
-        Stmt localStmt = localStmts->nth(i);
+    if (semant_debug) cout << endl;
+    Stmts localStmts = getStmts();
+    if (semant_debug) cout << "---StmtBlock_class::check---localStmts->len()---" << localStmts->len() << endl;
+    Stmt localStmt;
+    for (int i = localStmts->first(); localStmts->more(i); i = localStmts->next(i)) {
+        localStmt = localStmts->nth(i);
         localStmt->check(type);
     }
-    has_return_count--;
     objectEnv.exitscope();
 }
 
-//repeat*6 done
 void IfStmt_class::check(Symbol type) {
-    has_return_count++;
-    Expr condition = this->getCondition();
-    Symbol condType = condition->checkType();
+    if (semant_debug) cout << "---IfStmt_class---" << endl;
 
-    if (condType != Bool) {
-        semant_error(this) << "Condition must be a Bool, got " << condType << '.' <<endl;
-    }
+    Symbol conType = getCondition()->checkType();
+    if (!sameType(conType, Bool))
+        semant_error(this) << "Condition must be a Bool, got " << conType->get_string() << ".\n";
 
-    StmtBlock thenExpr = this->getThen();
-    StmtBlock elseExpr = this->getElse();
-
-    thenExpr->check(type);
-    elseExpr->check(type);
-    has_return_count--;
+    getThen()->check(type);
+    getElse()->check(type);
 }
 
 void WhileStmt_class::check(Symbol type) {
-    has_return_count++;
-    inloop++;
-    Expr condition = this->getCondition();
-    Symbol condType = condition->checkType();
+    if (semant_debug) cout << "---WhileStmt_class---" << endl;
 
-    if (condType != Bool) {
-        semant_error(this) << "Condition must be a Bool, got " << condType << '.' <<endl;
-    }
-
-    StmtBlock body = this->getBody();
-    body->check(type);
-    inloop--;
-    has_return_count--;
+    ++inloop;
+    if (semant_debug) cout << "while push inloop ,remaining " << inloop << endl;
+    Symbol conType = getCondition()->checkType();
+    if (!sameType(conType, Bool))
+        semant_error(this) << "Condition must be a Bool, got " << conType->get_string() << ".\n";
+    getBody()->check(type);
+    --inloop;
+    if (semant_debug) cout << "while pop inloop ,remaining " << inloop << endl;
 }
 
 void ForStmt_class::check(Symbol type) {
-    has_return_count++;
-    inloop++;
-    Expr init = this->getInit();
-    Expr loop = this->getLoop();
-    Expr condition = this->getCondition();
+    if (semant_debug) cout << "---ForStmt_class---" << endl;
 
-    init->checkType();
-    loop->checkType();
-    Symbol condType = condition->checkType();
-
-    if(condType != Bool && !condition->is_empty_Expr()) {
-        semant_error(this) << "Condition must be a Bool, got " << condType << '.' << endl;
+    ++inloop;
+    if (semant_debug) cout << "for push inloop ,remaining " << inloop << endl;
+    if (!getInit()->is_empty_Expr()) {
+        getInit()->checkType();
     }
-
-    StmtBlock body = this->getBody();
-    body->check(type);
-    inloop--;
-    has_return_count--;
+    if (!getLoop()->is_empty_Expr()) {
+        getLoop()->checkType();
+    }
+    if (!getCondition()->is_empty_Expr()) {
+        Symbol conType = getCondition()->checkType();
+        if (!sameType(conType, Bool)) {
+            semant_error(this) << "Condition must be a Bool, got " << conType->get_string() << ".\n";
+        }
+    }
+    getBody()->check(type);
+    --inloop;
+    if (semant_debug) cout << "for pop inloop ,remaining " << inloop << endl;
 }
 
 void ReturnStmt_class::check(Symbol type) {
-    if (has_return_count == 1){
-        has_return_bool = 1;
-    }
+    if (semant_debug) cout << "---ReturnStmt_class---" << endl;
 
-    Expr value = this->getValue();
-    Symbol thisType = value->checkType();
-
-    if (thisType != type) {
-        semant_error(this) << "Returns " << thisType << " , but need " << type << endl;
-    }
+    Symbol thisType = this->getValue()->checkType();
+    if (!sameType(thisType, type))
+        semant_error(this) << "Returns " << thisType->get_string() << " , but need " << type->get_string() << ".\n";
 }
 
 void ContinueStmt_class::check(Symbol type) {
-    if (inloop == 0) {
-        semant_error(this) << "continue must be used in a loop sentence." << endl;
-    }
+    if (semant_debug) cout << "---ContinueStmt_class---" << endl;
+
+    if (inloop == 0)
+        semant_error(this) << "continue must be used in a loop sentence.\n";
 }
 
 void BreakStmt_class::check(Symbol type) {
+    if (semant_debug) cout << "---BreakStmt_class---" << endl;
+
     if (inloop == 0) {
-        semant_error(this) << "break must be used in a loop sentence." << endl;
+        semant_error(this) << "break must be used in a loop sentence.\n";
     }
 }
 
 Symbol Call_class::checkType(){
-    //if (semant_debug) cout << "---Call_class---" << getName()->get_string() << endl;
+    if (semant_debug) cout << "---Call_class---" << getName()->get_string() << endl;
 
     if (callTable.find(getName()) == callTable.end()){
         if (strcmp(getName()->get_string(), print->get_string())==0) {
@@ -354,18 +346,16 @@ Symbol Call_class::checkType(){
     return callTable[getName()]->getType();
 }
 
-
-//done
 Symbol Actual_class::checkType(){
-    Symbol type = this->expr->checkType();
+    if (semant_debug) cout << "---Actual_class---" << endl;
+
+    Symbol type = expr->checkType();
     setType(type);
     return type;
 }
 
-
-//done
-Symbol Assign_class::checkType(){
-    //if (semant_debug) cout << "---Assign_class---" << lvalue->get_string() << endl;
+Symbol Assign_class::checkType(){ // expr
+    if (semant_debug) cout << "---Assign_class---" << lvalue->get_string() << endl;
 
     if (objectEnv.lookup(lvalue) == NULL) {
         semant_error(this) << "Left value " << lvalue << " has not been defined.\n";
@@ -377,13 +367,13 @@ Symbol Assign_class::checkType(){
     if (!sameType(expectedType, actualType)) {
         semant_error(this) << "Right value must have type " << expectedType->get_string() << " , got " << actualType->get_string() << ".\n";
     }
-
+//    if (sameType(expectedType, String)) {
+//        semant_error(this) << "Left value can not be String.\n";
+//    }
     setType(expectedType);
     return expectedType;
 }
 
-
-//repeat*19 done
 Symbol Add_class::checkType(){ // +
     if (semant_debug) cout << "---Add_class---" << endl;
 
@@ -741,26 +731,22 @@ Symbol Bitor_class::checkType(){
     }
 }
 
-//bug*1 almost done
 Symbol Bitnot_class::checkType(){
     if (semant_debug) cout << "---Bitnot_class---" << endl;
 
-    Symbol type1 = this->e1->checkType();
+    Symbol type1 = e1->checkType();
 
     if (!sameType(type1, Int)) {
-        //semant_error(this) << "Cannot use unary op ~ upon " << type1->get_string() << ".\n";
-        setType(Int);
-        //return Void;
-    }
-   else {
-        semant_error(this) << "Cannot use unary not(~) upon " << type1 << '.' <<endl;
+        semant_error(this) << "Cannot use unary op ~ upon " << type1->get_string() << ".\n";
         setType(Void);
+        return Void;
     }
-    return this->type;
+    else {
+        setType(Int);
+        return Int;
+    }
 }
 
-
-//repeat*4 done
 Symbol Const_int_class::checkType(){
     setType(Int);
     return type;
@@ -781,36 +767,40 @@ Symbol Const_bool_class::checkType(){
     return type;
 }
 
-
-//??
 Symbol Object_class::checkType(){
-    Symbol *expectType = objectEnv.lookup(this->var);
-    if (expectType) {
-        setType(*expectType);
+    if (semant_debug) cout << "---Object_class---" << var->get_string() << endl;
+
+    if (!objectEnv.lookup(var)) {
+        semant_error(this) << "object " << var->get_string() << " has not been defined.\n";
+        setType(Void);
+        return Void;
     }
     else {
-        semant_error(this) << "object " << this->var << " has not been defined." << endl;
-        setType(Void);
+        setType(*(objectEnv.lookup(var)));
+        return *(objectEnv.lookup(var));
     }
-    return type;
 }
 
-
-//done
 Symbol No_expr_class::checkType(){
     setType(Void);
     return getType();
 }
 
 void Program_class::semant() {
+    semant_debug = 0;
     initialize_constants();
     install_calls(decls);
     check_main();
+    objectEnv.enterscope();
     install_globalVars(decls);
-    check_calls(decls);
-    
+    check_calls();
+    objectEnv.exitscope();
+
     if (semant_errors > 0) {
         cerr << "Compilation halted due to static semantic errors." << endl;
         exit(1);
     }
 }
+
+
+
